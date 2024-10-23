@@ -1,6 +1,7 @@
-import { chatCompletion } from '@/api/chatApi'
+import { chatCompletion, streamChatCompletion } from '@/api/chatApi'
 import { ElMessage } from 'element-plus'
 import { useChatStore } from '@/stores'
+import { useReceiveStreamData } from './useReceiveStreamData'
 import { toValue } from 'vue'
 import type { Ref } from 'vue'
 
@@ -36,16 +37,38 @@ export const useMakeAutosuggestion = (
     }
   }
 
+  const handleProcessMessage = (json: any) => {
+    const choices = json.choices
+    choices.forEach((choice: streamChoice) => {
+      chatStore.messages[chatStore.messages.length - 1].content +=
+        choice.delta.content
+    })
+    scrollFn && scrollFn()
+  }
+  const beforeSend = () => {
+    const message = { role: 'assistant', content: '' }
+    chatStore.addMessage(message)
+  }
+  const { handleStreamResponse } = useReceiveStreamData(
+    handleProcessMessage,
+    beforeSend,
+  )
+
   const makeAutosuggestion = async (model: string, message: Message) => {
     const requestData = makeRequestData(model, message)
     if (!requestData) return
     try {
-      const response = await chatCompletion(requestData)
-      response.choices.forEach(choice => {
-        chatStore.addMessage(choice.message)
-      })
-      scrollFn && scrollFn()
-      return response
+      if (modelOptions.value.stream) {
+        const response = await streamChatCompletion(requestData)
+        handleStreamResponse(response)
+      } else {
+        const response = await chatCompletion(requestData)
+        response.choices.forEach(choice => {
+          chatStore.addMessage(choice.message)
+        })
+        scrollFn && scrollFn()
+        return response
+      }
     } catch (error) {
       console.error('Error during chatCompletion:', error)
       ElMessage.error('生成建议失败')

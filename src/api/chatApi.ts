@@ -32,6 +32,30 @@ deepseekApi.interceptors.response.use(
   },
 )
 
+// 封装fetch
+export const fetcher = async (
+  url: string,
+  method: string,
+  data: any = null,
+  options: any = {},
+) => {
+  const response = await fetch(BASE_URL + url, {
+    ...options,
+    method,
+    headers: {
+      ...options.headers,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${API_KEY}`,
+    },
+    body: data ? JSON.stringify(data) : null,
+  })
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status} ${response.statusText}`)
+  }
+
+  return response
+}
+
 // 封装 API 请求方法
 // 列出模型
 export const listModels = () => {
@@ -43,6 +67,14 @@ export const chatCompletion = (
   data: CompletionRequest,
 ): Promise<CompletionResponse> => {
   return deepseekApi.post('/chat/completions', data, {
+    headers: { Accept: 'application/json' },
+  })
+}
+// 流式对话补全
+export const streamChatCompletion = (
+  data: CompletionRequest,
+): Promise<Response> => {
+  return fetcher('/chat/completions', 'POST', data, {
     headers: { Accept: 'application/json' },
   })
 }

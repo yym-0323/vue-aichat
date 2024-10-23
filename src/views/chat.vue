@@ -25,9 +25,17 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
+        <el-radio-group v-model="modelOptions.stream" size="small" class="mr-4">
+          <el-radio-button label="流式返回" :value="true" />
+          <el-radio-button label="非流式" :value="false" />
+        </el-radio-group>
       </el-row>
       <div class="w-[60%] m-[0_auto]" id="scrollId">
-        <div v-for="(item, index) in messages" :key="index" class="mb-5">
+        <div
+          v-for="(item, index) in messages"
+          :key="index"
+          :class="index !== 0 ? 'mt-5' : ''"
+        >
           <div
             class="flex items-center"
             :class="{ 'flex-row-reverse': item.role === 'user' }"
@@ -53,7 +61,7 @@
         </div>
       </div>
     </div>
-    <div class="mb-5">
+    <div class="mb-5 mt-2">
       <div class="w-[60%] m-[0_auto] relative">
         <el-input
           v-model="inputVal"
@@ -75,7 +83,7 @@
         />
       </div>
     </div>
-    <div class="text-xs text-[#999999] text-center mb-2">
+    <div class="text-xs text-[#999] text-center mb-2">
       这玩意 也可能会犯错。请核查重要信息。
     </div>
   </div>
@@ -93,27 +101,28 @@ import {
 } from '@element-plus/icons-vue'
 import { useMakeAutosuggestion } from '@/hooks/useMakeAutosuggestion'
 import { useChatStore } from '@/stores/chat'
-const { messages } = storeToRefs(useChatStore())
-const { clearMessages } = useChatStore()
 
 const model = ref<string>('deepseek-chat')
 const modelList = ref<Model[]>([])
-const inputVal = ref<string>('')
-const btnDisabled = ref<boolean>(false)
-
+const { messages } = storeToRefs(useChatStore())
+const { clearMessages } = useChatStore()
 const handleCommand = (command: string | number | object) => {
   clearMessages()
   model.value = command as string
 }
+
+const inputVal = ref<string>('')
+const btnDisabled = ref<boolean>(false)
+const modelOptions = ref<ModelOptions>({
+  stream: true,
+})
 const scrollFn = () => {
   setTimeout(() => {
     const scrollId = document.getElementById('scrollId')
     scrollId?.scrollIntoView({ block: 'end' })
   }, 0)
 }
-
-const { makeAutosuggestion } = useMakeAutosuggestion(ref({}), scrollFn)
-
+const { makeAutosuggestion } = useMakeAutosuggestion(modelOptions, scrollFn)
 const send = async () => {
   if (inputVal.value.trim() === '') {
     return
