@@ -51,7 +51,10 @@
               {{ item.role === 'user' ? 'You' : model }}
             </span>
           </div>
-          <p class="pl-6" :class="{ 'text-right mt-2': item.role === 'user' }">
+          <p
+            class="pl-6"
+            :class="{ 'flex justify-end mt-2': item.role === 'user' }"
+          >
             <span
               v-if="item.role === 'user'"
               v-html="item.content"
