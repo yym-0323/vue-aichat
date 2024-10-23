@@ -53,10 +53,16 @@
           </div>
           <p class="pl-6 mt-2" :class="{ 'text-right': item.role === 'user' }">
             <span
-              class="whitespace-pre-wrap"
+              v-if="item.role === 'user'"
               v-html="item.content"
+              class="whitespace-pre-wrap"
               :class="item.role === 'user' ? 'bg-[#f0f0f0] p-2 rounded' : ''"
             ></span>
+            <MdPreview
+              v-else
+              editorId="preview-only"
+              :modelValue="item.content"
+            />
           </p>
         </div>
       </div>
@@ -99,6 +105,9 @@ import {
   UserFilled,
   Avatar,
 } from '@element-plus/icons-vue'
+import { MdPreview } from 'md-editor-v3'
+import 'md-editor-v3/lib/preview.css'
+
 import { useMakeAutosuggestion } from '@/hooks/useMakeAutosuggestion'
 import { useChatStore } from '@/stores/chat'
 
@@ -157,6 +166,8 @@ init()
 </script>
 
 <style scoped>
+@import 'md-editor-v3/lib/style.css';
+
 .el-dropdown-link {
   cursor: pointer;
   display: flex;
