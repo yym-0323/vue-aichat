@@ -1,0 +1,50 @@
+import axios from 'axios'
+
+// 从环境变量中读取 API Key 和 Base URL
+const API_KEY = import.meta.env.VITE_DEEPSEEK_API_KEY
+const BASE_URL = import.meta.env.VITE_DEEPSEEK_BASE_URL
+
+// 创建 Axios 实例
+const deepseekApi = axios.create({
+  baseURL: BASE_URL,
+  timeout: 1000 * 60 * 5, // 请求超时时间
+  maxBodyLength: Infinity,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+// 请求拦截器 - 自动添加 API Key 到 headers
+deepseekApi.interceptors.request.use(
+  config => {
+    config.headers['Authorization'] = `Bearer ${API_KEY}`
+    return config
+  },
+  error => Promise.reject(error),
+)
+
+// 响应拦截器
+deepseekApi.interceptors.response.use(
+  response => response.data, // 直接返回数据
+  error => {
+    console.error('API 请求错误:', error.response || error.message)
+    return Promise.reject(error)
+  },
+)
+
+// 封装 API 请求方法
+// 列出模型
+export const listModels = () => {
+  return deepseekApi.get('/models')
+}
+
+// 对话补全
+export const chatCompletion = (
+  data: CompletionRequest,
+): Promise<CompletionResponse> => {
+  return deepseekApi.post('/chat/completions', data, {
+    headers: { Accept: 'application/json' },
+  })
+}
+
+export default deepseekApi
