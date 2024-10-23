@@ -41,7 +41,7 @@ export const useMakeAutosuggestion = (
     const choices = json.choices
     choices.forEach((choice: streamChoice) => {
       chatStore.messages[chatStore.messages.length - 1].content +=
-        choice.delta.content
+        choice.delta?.content ?? ''
     })
     scrollFn && scrollFn()
   }

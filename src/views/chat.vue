@@ -5,7 +5,7 @@
         class="top-0 bg-[#fff] w-full h-[50px] z-10 justify-between items-center"
         style="position: sticky"
       >
-        <el-dropdown @command="handleCommand">
+        <el-dropdown @command="handleCommand" :max-height="200">
           <span
             class="el-dropdown-link ml-4 text-lg font-semibold text-[#213547]"
           >
@@ -164,6 +164,7 @@ const Keydown = ($event: Event) => {
 const init = async () => {
   const res = await listModels()
   modelList.value = res.data
+  if (modelList.value.length) model.value = modelList.value[0].id
 }
 init()
 </script>
