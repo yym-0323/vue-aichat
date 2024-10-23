@@ -15,5 +15,3 @@ import Chat from '@/views/chat.vue'
     <Chat class="flex-1" />
   </div>
 </template>
-
-<style scoped></style>
