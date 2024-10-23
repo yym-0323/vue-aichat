@@ -37,3 +37,16 @@ pnpm build
 ```sh
 pnpm lint
 ```
+
+## ⚡ Tips
+
+node version <a href="https://nodejs.org/" target="_blank">>=20.16.0</a>
+
+### environment variables
+
+Manually add .env files to the root directory of the project.
+
+```js
+VITE_DEEPSEEK_API_KEY=sk-xxx // Your API Key
+VITE_DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
+```
