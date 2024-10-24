@@ -48,8 +48,8 @@ Manually add .env files to the root directory of the project.
 
 ```js
 // Your API Key
-VITE_DEEPSEEK_API_KEY=sk-xxx
+VITE_API_KEY=sk-xxx
 
 // Or other OpenAI API interface style models
-VITE_DEEPSEEK_BASE_URL=https://api.openai.com/v1
+VITE_BASE_URL=https://api.openai.com/v1
 ```

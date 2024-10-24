@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 // 从环境变量中读取 API Key 和 Base URL
-const API_KEY = import.meta.env.VITE_DEEPSEEK_API_KEY
-const BASE_URL = import.meta.env.VITE_DEEPSEEK_BASE_URL
+const API_KEY = import.meta.env.VITE_API_KEY
+const BASE_URL = import.meta.env.VITE_BASE_URL
 
 // 创建 Axios 实例
 const deepseekApi = axios.create({
