@@ -1,9 +1,9 @@
-import { chatCompletion, streamChatCompletion } from '@/api/chatApi'
-import { ElMessage } from 'element-plus'
-import { useChatStore } from '@/stores'
-import { useReceiveStreamData } from './useReceiveStreamData'
 import { toValue } from 'vue'
 import type { Ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { chatCompletion, streamChatCompletion } from '@/api/chatApi'
+import { useChatStore } from '@/stores'
+import { useReceiveStreamData } from './useReceiveStreamData'
 
 const defaultModelOptions: ModelOptions = {
   stream: false,
@@ -60,7 +60,7 @@ export const useMakeAutosuggestion = (
     try {
       if (modelOptions.value.stream) {
         const response = await streamChatCompletion(requestData)
-        handleStreamResponse(response)
+        await handleStreamResponse(response)
       } else {
         const response = await chatCompletion(requestData)
         response.choices.forEach(choice => {

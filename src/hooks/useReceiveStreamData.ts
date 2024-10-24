@@ -25,10 +25,10 @@ export const useReceiveStreamData = (
           return // 如果返回 false，则结束处理
         }
       }
-      read() // 继续读取后续的数据
+      await read() // 继续读取后续的数据
     }
     if (reader) {
-      read()
+      await read()
     }
   }
 
